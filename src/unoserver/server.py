@@ -161,7 +161,7 @@ class UnoServer:
                     logger.info(stat)
                     
                 logger.info("[ Top 10 memory-consuming objects ]")
-                stats = objgraph.most_common_types(10, None, shortnames=True, shortnames=False)
+                stats = objgraph.most_common_types(10, None, shortnames=True)
                 width = max(len(name) for name, count in stats)
                 for name, count in stats:
                     logger.info('%-*s %i\n' % (width, name, count))
