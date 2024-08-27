@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import logging
+import gc
 import os
 import signal
 import socket
@@ -171,6 +172,9 @@ class UnoServer:
                 width = max(len(name) for name, _, _ in oresult)
                 for name, count, delta in oresult:
                     logger.info('%-*s%9d %+9d\n' % (width, name, count, delta))
+
+                gc.collect()
+                logger.info(gc.garbage)
 
                 result = conv.convert(
                     inpath,
