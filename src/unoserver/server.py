@@ -173,6 +173,10 @@ class UnoServer:
                 for name, count, delta in oresult:
                     logger.info('%-*s%9d %+9d\n' % (width, name, count, delta))
 
+                objgraph.show_backrefs(objgraph.by_type('tuple')[0], max_depth=10)
+                objgraph.show_backrefs(objgraph.by_type('tuple')[3], max_depth=10)
+                objgraph.show_backrefs(objgraph.by_type('tuple')[10], max_depth=10)
+
                 gc.collect()
                 logger.info(gc.garbage)
 
