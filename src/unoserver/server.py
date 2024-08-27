@@ -14,6 +14,7 @@ import platform
 import xmlrpc.server
 from importlib import metadata
 from pathlib import Path
+import objgraph
 
 from unoserver import converter, comparer
 
@@ -155,11 +156,21 @@ class UnoServer:
                 snapshot = tracemalloc.take_snapshot()
                 top_stats = snapshot.statistics('lineno')
 
-                print("[ Top 10 memory-consuming lines ]")
                 logger.info("[ Top 10 memory-consuming lines ]")
                 for stat in top_stats[:10]:
-                    print(stat)
                     logger.info(stat)
+                    
+                logger.info("[ Top 10 memory-consuming objects ]")
+                stats = objgraph.most_common_types(10, None, shortnames=True, shortnames=False)
+                width = max(len(name) for name, count in stats)
+                for name, count in stats:
+                    logger.info('%-*s %i\n' % (width, name, count))
+
+                logger.info("[ Top 10 long-living objects ]")
+                oresult = objgraph.growth(10, shortnames=True, filter=filter)
+                width = max(len(name) for name, _, _ in oresult)
+                for name, count, delta in oresult:
+                    logger.info('%-*s%9d %+9d\n' % (width, name, count, delta))
 
                 result = conv.convert(
                     inpath,
