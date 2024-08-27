@@ -9,6 +9,7 @@ import subprocess
 import sys
 import tempfile
 import threading
+import tracemalloc
 import platform
 import xmlrpc.server
 from importlib import metadata
@@ -60,6 +61,8 @@ class UnoServer:
         import time
 
         logger.info(f"Starting unoserver {__version__}.")
+        
+        tracemalloc.start()
 
         connection = (
             "socket,host=%s,port=%s,tcpNoDelay=1;urp;StarOffice.ComponentContext"
@@ -149,6 +152,13 @@ class UnoServer:
                 conv = converter.UnoConverter(
                     interface=self.uno_interface, port=self.uno_port
                 )
+                snapshot = tracemalloc.take_snapshot()
+                top_stats = snapshot.statistics('lineno')
+
+                print("[ Top 10 memory-consuming lines ]")
+                for stat in top_stats[:10]:
+                    print(stat)
+
                 result = conv.convert(
                     inpath,
                     indata,
