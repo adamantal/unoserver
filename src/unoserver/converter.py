@@ -69,6 +69,7 @@ class UnoConverter:
 
     def __init__(self, interface="127.0.0.1", port="2002"):
         logger.info("Starting unoconverter.")
+        logger.info("using forked unoconverter")
 
         self.local_context = uno.getComponentContext()
         self.resolver = self.local_context.ServiceManager.createInstanceWithContext(

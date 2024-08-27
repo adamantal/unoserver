@@ -156,8 +156,10 @@ class UnoServer:
                 top_stats = snapshot.statistics('lineno')
 
                 print("[ Top 10 memory-consuming lines ]")
+                logger.info("[ Top 10 memory-consuming lines ]")
                 for stat in top_stats[:10]:
                     print(stat)
+                    logger.info(stat)
 
                 result = conv.convert(
                     inpath,
